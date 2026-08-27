@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background: #0a0a0a;
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+/* 渐变文字 */
+.text-gradient {
+  background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 50%, #34d399 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 玻璃拟态卡片 */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+/* 骨架屏动画 */
+@keyframes shimmer {
+  0% { background-position: -468px 0; }
+  100% { background-position: 468px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #1a1a1a 25%, #262626 37%, #1a1a1a 63%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+/* 视频卡片 hover 上浮 */
+.card-hover {
+  transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s ease;
+}
+.card-hover:hover { transform: translateY(-4px); }
+
+/* 渐入动画 */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: fadeUp .5s ease both; }
+
+/* 播放按钮脉冲 */
+@keyframes pulse-ring {
+  0% { transform: scale(.8); opacity: .8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.pulse-ring::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: rgba(139,92,246,.5);
+  animation: pulse-ring 1.6s cubic-bezier(.4,0,.2,1) infinite;
+}
+
+/* 进度条条 */
+input[type="range"].thumb {
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,.25);
+}
+input[type="range"].thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}

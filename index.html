@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#0b0f19" />
+<title>Lumina · 视频社区</title>
+<style>
+:root{--bg:#0b0f19;--bg2:#121829;--card:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--text:#eef1f6;--muted:#9aa4b5;--brand:#7c5cff;--brand2:#2f9bff;--danger:#ff5c7c;--radius:16px}
+*{box-sizing:border-box;margin:0;padding:0}html,body,#root{height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:radial-gradient(1200px 600px at 80% -10%,rgba(124,92,255,.18),transparent 60%),radial-gradient(900px 500px at -10% 10%,rgba(47,155,255,.12),transparent 55%),var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer;border:none}input,textarea{font-family:inherit}
+.app{display:flex;flex-direction:column;min-height:100vh}
+.navbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;padding:12px 20px;background:rgba(11,15,25,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;letter-spacing:-.3px;cursor:pointer}
+.logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;box-shadow:0 6px 18px rgba(124,92,255,.45)}
+.logo svg{width:17px;height:17px;fill:#fff}
+.search{flex:1;max-width:460px;margin:0 auto;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:9px 13px;color:var(--muted)}
+.search input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:14px}.search input::placeholder{color:#5f6a7e}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:11px;font-size:14px;font-weight:600;transition:transform .12s,box-shadow .18s,background .18s;white-space:nowrap}
+.btn:active{transform:scale(.96)}.btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;box-shadow:0 8px 22px rgba(124,92,255,.35)}.btn-primary:hover{box-shadow:0 10px 28px rgba(124,92,255,.5)}
+.btn-ghost{background:var(--card);border:1px solid var(--border);color:var(--text)}.btn-ghost:hover{background:rgba(255,255,255,.08)}.btn-sm{padding:6px 12px;font-size:13px;border-radius:9px}
+.main{flex:1;width:100%;max-width:1280px;margin:0 auto;padding:22px 20px 60px}
+.section-title{font-size:18px;font-weight:700;margin:6px 2px 16px;letter-spacing:-.2px}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+@media(max-width:560px){.grid{grid-template-columns:1fr;gap:16px}.navbar{padding:10px 14px;gap:8px}.brand span{font-size:16px}.search{display:none}.main{padding:16px 14px 80px}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}
+.card:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.45);box-shadow:0 14px 34px rgba(0,0,0,.35)}
+.thumb{position:relative;aspect-ratio:16/9;background:#000}.thumb video,.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .duration{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.72);font-size:11px;padding:3px 7px;border-radius:6px;font-weight:600}
+.thumb .play{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .2s;background:rgba(0,0,0,.25)}.card:hover .play{opacity:1}
+.thumb .play span{width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.3)}.thumb .play svg{width:22px;height:22px;fill:#1a1a2e;margin-left:3px}
+.card-body{padding:12px 14px}.card-title{font-size:14.5px;font-weight:600;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-meta{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:12.5px;color:var(--muted)}
+.avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.card-meta .dot{width:3px;height:3px;border-radius:50%;background:currentColor;opacity:.6}
+.player-page{display:grid;grid-template-columns:1fr 340px;gap:24px}@media(max-width:900px){.player-page{grid-template-columns:1fr}}
+.player-wrap{background:#000;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}.player-wrap video{width:100%;aspect-ratio:16/9;background:#000;display:block}
+.video-info{padding:18px 4px 4px}.video-info h1{font-size:21px;font-weight:800;letter-spacing:-.3px;line-height:1.35}
+.video-info .sub{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:12px;color:var(--muted);font-size:13.5px}
+.actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.action-btn{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);padding:8px 14px;border-radius:10px;font-size:13.5px;color:var(--text);font-weight:600}
+.action-btn.active{color:var(--brand);border-color:rgba(124,92,255,.5);background:rgba(124,92,255,.12)}.action-btn svg{width:18px;height:18px;fill:currentColor}
+.description{margin-top:18px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:14px;color:#c7cdd8;font-size:14px;line-height:1.7;white-space:pre-wrap}
+.side-title{font-size:15px;font-weight:700;margin:2px 2px 14px}.side-list{display:flex;flex-direction:column;gap:14px}.side-item{display:flex;gap:12px;cursor:pointer}
+.side-item .thumb{width:168px;flex-shrink:0;border-radius:12px}@media(max-width:900px){.side-item .thumb{width:200px}}
+.side-item .info{flex:1;min-width:0}.side-item .info h4{font-size:14px;font-weight:600;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.side-item .info p{font-size:12px;color:var(--muted);margin-top:6px}
+.modal-backdrop{position:fixed;inset:0;z-index:100;background:rgba(4,7,14,.72);backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px;animation:fade .2s}@keyframes fade{from{opacity:0}to{opacity:1}}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:440px;box-shadow:0 30px 80px rgba(0,0,0,.5)}.modal h2{font-size:21px;font-weight:800;margin-bottom:6px}.modal .subtitle{color:var(--muted);font-size:13.5px;margin-bottom:22px}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}.field label{font-size:12.5px;font-weight:600;color:#c2cad8}
+.field input,.field textarea{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;transition:border-color .15s}.field textarea{resize:vertical;min-height:80px}.field input:focus,.field textarea:focus{border-color:var(--brand)}
+.modal .btn-primary{width:100%;justify-content:center;padding:13px;font-size:15px;margin-top:4px}.modal-close{position:absolute;top:18px;right:18px;background:var(--card);border:1px solid var(--border);width:32px;height:32px;border-radius:50%;color:var(--muted);display:grid;place-items:center}.modal-wrap{position:relative}
+.drop{border:2px dashed var(--border);border-radius:14px;padding:30px 20px;text-align:center;color:var(--muted);transition:border-color .2s,background .2s;cursor:pointer}.drop.dragover{border-color:var(--brand);background:rgba(124,92,255,.08);color:var(--text)}.drop .icon{width:44px;height:44px;margin:0 auto 10px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center}.drop svg{width:22px;height:22px;fill:#fff}.drop strong{color:var(--text)}
+.progress{height:8px;background:var(--card);border-radius:8px;overflow:hidden;margin-top:14px}.progress>div{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));transition:width .2s}
+.error{color:var(--danger);font-size:13px;margin-top:12px;text-align:center}.hint{font-size:12px;color:var(--muted);margin-top:12px;text-align:center}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);padding:12px 20px;border-radius:12px;font-size:14px;font-weight:600;z-index:200;box-shadow:0 14px 40px rgba(0,0,0,.4);animation:slideUp .25s}@keyframes slideUp{from{transform:translate(-50%,20px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+.empty{text-align:center;padding:70px 20px;color:var(--muted)}.empty .big{font-size:44px;margin-bottom:12px}.empty h3{color:var(--text);font-size:17px;margin-bottom:6px}
+.bottom-nav{display:none}@media(max-width:700px){.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(11,15,25,.92);backdrop-filter:blur(14px);border-top:1px solid var(--border);padding:8px 6px calc(8px + env(safe-area-inset-bottom));justify-content:space-around}.bottom-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;color:var(--muted);font-size:10px;padding:6px}.bottom-nav button.active{color:var(--brand)}.bottom-nav svg{width:22px;height:22px;fill:currentColor}.main{padding-bottom:90px}}
+/* ===== 新增：分类标签 / Hero / 评论 / 订阅 / 稍后观看 ===== */
+.hero{position:relative;overflow:hidden;border-radius:20px;padding:34px 32px;background:linear-gradient(120deg,rgba(124,92,255,.28),rgba(47,155,255,.14) 55%,transparent),radial-gradient(600px 200px at 90% 10%,rgba(255,92,124,.18),transparent);border:1px solid var(--border);margin-bottom:22px}.hero h1{font-size:26px;font-weight:800;letter-spacing:-.4px;line-height:1.3;max-width:620px}.hero p{color:var(--muted);margin-top:10px;max-width:560px;font-size:14.5px;line-height:1.6}.hero .btn{margin-top:18px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 2px 18px}.tab{padding:8px 16px;border-radius:20px;font-size:13.5px;font-weight:600;background:var(--card);border:1px solid var(--border);color:var(--muted);transition:all .15s}.tab.active{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent}.tab:hover{color:var(--text)}
+.channel-row{display:flex;align-items:center;gap:12px;margin:14px 0 6px}.subscribe-btn{margin-left:auto;padding:7px 16px;border-radius:10px;font-size:13px;font-weight:700;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff}.subscribe-btn.subscribed{background:var(--card);border:1px solid var(--border);color:var(--muted);font-weight:600}
+.comments{margin-top:22px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}.comments h3{font-size:16px;font-weight:700;margin-bottom:14px}.comment-form{display:flex;gap:10px;margin-bottom:18px}.comment-form textarea{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:11px 13px;color:var(--text);font-size:14px;resize:vertical;min-height:44px;outline:none}.comment-form textarea:focus{border-color:var(--brand)}.comment{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid var(--border)}.comment:last-child{border-bottom:none}.comment .body{flex:1}.comment .head{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted)}.comment .head b{color:var(--text);font-size:13.5px}.comment p{font-size:14px;margin-top:5px;line-height:1.55;color:#dde2ec}.comment .clike{margin-top:4px;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);background:none;cursor:pointer}.empty-tab{padding:50px 20px;text-align:center;color:var(--muted);font-size:14px}.empty-tab .big{font-size:40px;margin-bottom:10px}
+.profile-head{display:flex;align-items:center;gap:16px;padding:22px;background:var(--card);border:1px solid var(--border);border-radius:18px;margin-bottom:20px}.profile-head .avatar{width:56px;height:56px;font-size:20px}.profile-head h2{font-size:19px;font-weight:800}.profile-head .email{color:var(--muted);font-size:13px}.profile-stats{display:flex;gap:22px;margin-top:8px;font-size:13px;color:var(--muted)}.profile-stats b{color:var(--text)}.watch-btn{background:none;border:none;color:var(--muted);padding:6px;margin-left:auto}.watch-btn.active{color:var(--brand)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel" data-presets="react">
+const {useState,useEffect,useCallback,useMemo} = React;
+const STORE_KEY='lumina_data_v1';
+const getStore=()=>{try{return JSON.parse(localStorage.getItem(STORE_KEY))||{}}catch{return{}}};
+const setStore=d=>localStorage.setItem(STORE_KEY,JSON.stringify(d));
+const seed=()=>({users:{'demo@lumina.app':{name:'演示用户',avatar:'演'}},videos:[
+ {id:'d1',title:'欢迎来到 Lumina · 产品介绍',author:'Lumina官方',authorEmail:'demo@lumina.app',duration:'0:42',views:12890,likes:842,uploadedAt:Date.now()-864e5*2,category:'科技',description:'这是一个演示视频。\n\n上传你自己的视频，和大家一起分享精彩内容吧！',src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'},
+ {id:'d2',title:'美丽的自然风光 · 4K航拍合集',author:'自然频道',authorEmail:'nature@lumina.app',duration:'1:15',views:5420,likes:321,uploadedAt:Date.now()-864e5*5,category:'自然',description:'来自世界各地的壮丽风景。',src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'},
+ {id:'d3',title:'如何打造一个好看的视频网站',author:'设计小栈',authorEmail:'design@lumina.app',duration:'3:08',views:921,likes:88,uploadedAt:Date.now()-36e5*6,category:'设计',description:'UI/UX 设计思路分享。',src:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4'},
+],comments:{'d1':[{id:'c1',author:'设计小栈',authorEmail:'design@lumina.app',text:'欢迎欢迎！界面确实很漂亮 🎨',createdAt:Date.now()-36e5*5,likes:12}]}});
+if(!getStore().videos){setStore(seed())}
+const fmtViews=n=>n>=1e4?(n/1e4).toFixed(1)+'万':n.toString();
+const fmtTime=ts=>{const d=Math.floor((Date.now()-ts)/864e5);if(d>=1)return d+'天前';const h=Math.floor((Date.now()-ts)/36e5);if(h>=1)return h+'小时前';const m=Math.floor((Date.now()-ts)/6e4);return m>=1?m+'分钟前':'刚刚'};
+const initials=n=>n?n.trim().charAt(0).toUpperCase():'?';
+const I=(p)=><svg viewBox="0 0 24 24" {...p}/>;
+
+function Navbar({user,onLogin,onUpload,onHome,query,setQuery}){
+ return <nav className="navbar">
+  <a className="brand" onClick={onHome}><span className="logo"><I><path d="M8 5v14l11-7z"/></I></span><span>Lumina</span></a>
+  <div className="search"><I style={{width:18,height:18}}><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></I><input placeholder="搜索视频…" value={query} onChange={e=>setQuery(e.target.value)}/></div>
+  <div className="nav-actions">
+   <button className="btn btn-primary btn-sm" onClick={onUpload}><I style={{width:16,height:16}}><path d="M14 13h-4v5H7l5 5 5-5h-3v-5zm-4-2V6H7l5-5 5 5h-3v5H10z" transform="translate(0 3)"/></I><span>上传</span></button>
+   {user?<div className="avatar" title={user.email} onClick={onHome} style={{cursor:'pointer'}}>{initials(user.name)}</div>:<button className="btn btn-ghost btn-sm" onClick={onLogin}>登录</button>}
+  </div>
+ </nav>;
+}
+function VideoCard({video,onClick}){
+ return <div className="card" onClick={()=>onClick(video)}>
+  <div className="thumb"><video src={video.src} muted preload="metadata" playsInline/><span className="duration">{video.duration}</span><div className="play"><span><I><path d="M8 5v14l11-7z"/></I></span></div></div>
+  <div className="card-body"><div className="card-title">{video.title}</div>
+   <div className="card-meta"><span className="avatar" style={{width:22,height:22,fontSize:10}}>{initials(video.author)}</span><span>{video.author}</span><span className="dot"/><span>{fmtViews(video.views)} 次观看</span></div>
+  </div>
+ </div>;
+}
+function SideItem({video,onClick}){
+ return <div className="side-item" onClick={()=>onClick(video)}>
+  <div className="thumb"><video src={video.src} muted preload="metadata" playsInline style={{width:'100%',height:'100%',objectFit:'cover'}}/></div>
+  <div className="info"><h4>{video.title}</h4><p>{video.author}</p><p>{fmtViews(video.views)} 次观看 · {fmtTime(video.uploadedAt)}</p></div>
+ </div>;
+}
+function LoginModal({open,onClose,onLogin}){
+ const [email,setEmail]=useState('');const [name,setName]=useState('');const [code,setCode]=useState('');const [step,setStep]=useState('email');const [err,setErr]=useState('');
+ useEffect(()=>{if(!open){setStep('email');setErr('');setCode('')}},[open]);
+ if(!open)return null;
+ const submitEmail=e=>{e.preventDefault();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){setErr('请输入有效的电子邮箱地址');return}setErr('');
+  const c=Math.floor(1e5+Math.random()*9e5).toString();alert(`[演示] 验证码已发送至 ${email}：${c}\n（实际部署时通过邮件发送）`);setStep('code');};
+ const submitCode=e=>{e.preventDefault();if(code.length<4){setErr('请输入验证码');return}const store=getStore();let u=store.users[email];if(!u){u={name:name||email.split('@')[0],avatar:initials(name||email)};store.users[email]=u;setStore(store)}onLogin({email,name:u.name,avatar:u.avatar});onClose();};
+ return <div className="modal-backdrop" onClick={onClose}><div className="modal-wrap" onClick={e=>e.stopPropagation()}><div className="modal">
+  <button className="modal-close" onClick={onClose}>✕</button>
+  <h2>{step==='email'?'登录 Lumina':'输入验证码'}</h2>
+  <p className="subtitle">{step==='email'?'使用电子邮箱登录或注册，无需密码':`验证码已发送至 ${email}`}</p>
+  {step==='email'?<form onSubmit={submitEmail}><div className="field"><label>电子邮箱</label><input type="email" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} autoFocus required/></div>
+   <div className="field"><label>昵称（可选）</label><input placeholder="留空将自动生成" value={name} onChange={e=>setName(e.target.value)}/></div>
+   <button type="submit" className="btn btn-primary">发送验证码</button><p className="hint">点击发送即表示同意服务条款</p></form>
+  :<form onSubmit={submitCode}><div className="field"><label>6 位验证码</label><input inputMode="numeric" maxLength="6" placeholder="123456" value={code} onChange={e=>setCode(e.target.value.replace(/\D/,'') )} autoFocus required/></div>
+   {err&&<p className="error">{err}</p>}<button type="submit" className="btn btn-primary">验证并登录</button>
+   <button type="button" className="btn btn-ghost" style={{width:'100%',justifyContent:'center',marginTop:10}} onClick={()=>setStep('email')}>← 返回修改邮箱</button></form>}
+ </div></div></div>;
+}
+function UploadModal({open,onClose,user,onUploaded}){
+ const [file,setFile]=useState(null);const [title,setTitle]=useState('');const [desc,setDesc]=useState('');const [progress,setProgress]=useState(0);const [drag,setDrag]=useState(false);const [err,setErr]=useState('');
+ useEffect(()=>{if(!open){setFile(null);setTitle('');setDesc('');setProgress(0);setErr('')}},[open]);
+ if(!open)return null;
+ const pick=f=>{if(!f)return;if(!f.type.startsWith('video/')){setErr('请选择视频文件');return}setErr('');setFile(f);if(!title)setTitle(f.name.replace(/\.[^/.]+$/,""))};
+ const submit=e=>{e.preventDefault();if(!file){setErr('请先选择视频文件');return}if(!title.trim()){setErr('请输入视频标题');return}let p=0;setProgress(1);const t=setInterval(()=>{p+=Math.random()*15+5;if(p>=100){clearInterval(t);setProgress(100);const url=URL.createObjectURL(file);const v={id:'v'+Date.now(),title:title.trim(),author:user.name,authorEmail:user.email,duration:'0:00',views:0,likes:0,uploadedAt:Date.now(),description:desc||'暂无描述',src:url};const store=getStore();store.videos.unshift(v);setStore(store);setTimeout(()=>{onUploaded(v);onClose()},400)}else setProgress(p)},180)};
+ return <div className="modal-backdrop" onClick={onClose}><div className="modal-wrap" onClick={e=>e.stopPropagation()}><div className="modal" style={{maxWidth:480}}>
+  <button className="modal-close" onClick={onClose}>✕</button><h2>上传视频</h2><p className="subtitle">已登录为 <b>{user.email}</b></p>
+  <form onSubmit={submit}><label className={`drop ${drag?'dragover':''}`} onDragOver={e=>{e.preventDefault();setDrag(true)}} onDragLeave={()=>setDrag(false)} onDrop={e=>{e.preventDefault();setDrag(false);pick(e.dataTransfer.files[0])}}>
+   <input type="file" accept="video/*" hidden onChange={e=>pick(e.target.files[0])}/><div className="icon"><I><path d="M14 13h-4v5H7l5 5 5-5h-3v-5zm-4-2V6H7l5-5 5 5h-3v5H10z" transform="translate(0 3)"/></I></div>
+   {file?<><strong>{file.name}</strong><p style={{fontSize:12,marginTop:6}}>{(file.size/1048576).toFixed(1)} MB · 点击或拖拽替换</p></>:<><strong>点击或拖拽视频到此处</strong><p style={{fontSize:12,marginTop:6}}>支持 MP4 / WebM / MOV</p></>}
+   {progress>0&&progress<100&&<div className="progress"><div style={{width:progress+'%'}}/></div>}
+  </label>
+  <div className="field" style={{marginTop:16}}><label>标题</label><input value={title} onChange={e=>setTitle(e.target.value)} placeholder="给视频起个吸引人的标题" required/></div>
+  <div className="field"><label>简介（可选）</label><textarea value={desc} onChange={e=>setDesc(e.target.value)} placeholder="描述一下你的视频内容…"/></div>
+  {err&&<p className="error">{err}</p>}
+  <button type="submit" className="btn btn-primary" disabled={progress>0&&progress<100}>{progress>0&&progress<100?`上传中 ${Math.round(progress)}%`:'发布视频'}</button>
+  </form>
+ </div></div></div>;
+}
+function HomePage({videos,onPlay,onUpload,activeTab,onTab}){
+ return <><div className="hero"><h1>🎬 发现精彩，分享瞬间</h1><p>一个简洁、优雅的视频社区。上传你的创作，探索来自全球的优质内容。</p><button className="btn btn-primary" onClick={onUpload}>立即上传</button></div>
+  <div className="tabs">{CATEGORIES.map(c=<button key={c} className={`tab ${c===activeTab?'active':''}`} onClick={()=>onTab(c)}>{c}</button>)}</div>
+  <h2 className="section-title">{videos.length>0?'推荐视频':'该分类下暂无视频'}</h2>{videos.length===0?<div className="empty"><div className="big">🎬</div><h3>还没有视频</h3><p>成为第一个上传的人吧！</p></div>:<div className="grid">{videos.map(v=<VideoCard key={v.id} video={v} onClick={onPlay}/>)}</div>}</>;
+}
+function PlayerPage({video,allVideos,onPlay,onLike,liked,subs,onSub,watch,onWatch,onAddComment,onLikeComment,comments}){
+ const [count,setCount]=useState(video.likes);
+ const handleLike=()=>{if(!localStorage.getItem('lumina_user')){alert('请先登录');return}onLike(video.id);setCount(c=>c+(liked?-1:1))};
+ const isSub=subs.includes(video.authorEmail);const isWatch=watch.includes(video.id);
+ return <div className="player-page"><div>
+  <div className="player-wrap"><video src={video.src} controls autoPlay playsInline/></div>
+  <div className="video-info"><h1>{video.title}</h1>
+   <div className="channel-row"><span className="avatar">{initials(video.author)}</span><div><b>{video.author}</b><div style={{color:'var(--muted)',fontSize:12.5}}>{fmtViews(video.views)} 次观看 · {fmtTime(video.uploadedAt)}</div></div>
+    <button className={`subscribe-btn ${isSub?'subscribed':''}`} onClick={()=>onSub(video.authorEmail)}>{isSub?'✓ 已订阅':'+ 订阅'}</button>
+   </div>
+   <div className="actions">
+    <button className={`action-btn ${liked?'active':''}`} onClick={handleLike}><I><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></I> {count}</button>
+    <button className={`action-btn ${isWatch?'active':''}`} onClick={()=>onWatch(video)}><I><path d="M12 4v1.5c4.31 0 7.84 3.66 8.38 8.25.08.63-.38 1.25-1.02 1.25H19c-.63 0-1.14-.52-1.07-1.14C17.8 9.9 15.2 7.5 12 7.5v1.5L7.5 6 12 4zm-5.13 5.37c-.4.1-.68.48-.68.9v4.46c0 .42.28.8.68.9.52.13 1.03.28 1.53.44.47.13.92-.2.92-.7V10.7c0-.5-.45-.83-.92-.7-.5.16-1.01.31-1.53.44zM12 18.5v-1.5c-4.31 0-7.84-3.66-8.38-8.25C3.54 7.62 4 7 4.63 7H5c.63 0 1.14.52 1.07 1.14C6.2 12.1 8.8 14.5 12 14.5v-1.5l4.5 2.5L12 18.5z"/></I> {isWatch?'已收藏':'稍后观看'}</button>
+    <button className="action-btn" onClick={()=>{navigator.clipboard?.writeText(location.href);alert('链接已复制')}}><I><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></I> 分享</button>
+   </div>
+   <div className="description">{video.description}</div>
+   <Comments videoId={video.id} items={comments} userEmail={localStorage.getItem('lumina_user')?JSON.parse(localStorage.getItem('lumina_user')).email:null} onAdd={t=>onAddComment(video.id,t)} onLike={cid=>onLikeComment(video.id,cid)}/>
+  </div>
+ </div><div><h3 className="side-title">相关推荐</h3><div className="side-list">{allVideos.filter(v=>v.id!==video.id).slice(0,6).map(v=<SideItem key={v.id} video={v} onClick={onPlay}/>)}</div></div></div>;
+}
+function Comments({videoId,items,userEmail,onAdd,onLike}){
+ const [text,setText]=useState('');
+ const submit=e=>{e.preventDefault();if(!userEmail){alert('请先登录后再评论');return}if(!text.trim())return;onAdd(text.trim());setText('')};
+ return <div className="comments"><h3>评论 {items.length>0&&`· ${items.length}`}</h3>
+  <form className="comment-form" onSubmit={submit}><span className="avatar">{userEmail?initials(JSON.parse(localStorage.getItem('lumina_user')).name):'?'}</span>
+   <textarea placeholder={userEmail?'写下你的评论…':'登录后即可发表评论'+(userEmail?'':'')} value={text} onChange={e=>setText(e.target.value)} disabled={!userEmail}/></form>
+  {items.length===0?<div className="empty-tab">💬 还没有评论，来抢沙发吧</div>:
+   items.slice().sort((a,b)=>b.createdAt-a.createdAt).map(c=>(
+    <div className="comment" key={c.id}><span className="avatar" style={{width:32,height:32,fontSize:12}}>{initials(c.author)}</span>
+     <div className="body"><div className="head"><b>{c.author}</b><span>{fmtTime(c.createdAt)}</span></div><p>{c.text}</p>
+      <button className="clike" onClick={()=>onLike(c.id)}>👍 {c.likes>0?c.likes:''}</button></div></div>))}
+ </div>;
+}
+
+const CATEGORIES=['全部','科技','设计','自然','游戏','音乐','生活'];
+function App(){
+ const [user,setUser]=useState(()=>{try{return JSON.parse(localStorage.getItem('lumina_user'))}catch{return null}});
+ const [videos,setVideos]=useState(()=>{init();return getStore().videos||[]});
+ const [current,setCurrent]=useState(null);const [query,setQuery]=useState('');const [loginOpen,setLoginOpen]=useState(false);const [uploadOpen,setUploadOpen]=useState(false);const [toast,setToast]=useState('');const [tab,setTab]=useState('home');const [activeTab,setActiveTab]=useState('全部');
+ const init=()=>{if(!getStore().videos)setStore(seed())};
+ const refresh=()=>setVideos(getStore().videos||[]);
+ const store_=()=>getStore();
+ const showToast=m=>{setToast(m);setTimeout(()=>setToast(''),2200)};
+ const filtered=useMemo(()=>{const q=query.trim().toLowerCase();let list=videos;if(activeTab!=='全部')list=list.filter(v=>v.category===activeTab);if(q)list=list.filter(v=>v.title.toLowerCase().includes(q)||v.author.toLowerCase().includes(q));return list},[videos,query,activeTab]);
+ const requireLogin=()=>{if(!user){setLoginOpen(true);showToast('请先登录');return false}return true};
+ const handleUploadClick=()=>{if(requireLogin())setUploadOpen(true)};
+ const onLogin=u=>{localStorage.setItem('lumina_user',JSON.stringify(u));setUser(u);showToast(`欢迎，${u.name}`)};
+ const likedSet=()=>new Set(JSON.parse(localStorage.getItem('lumina_likes')||'[]'));
+ const onLike=id=>{const s=likedSet();if(s.has(id))s.delete(id);else s.add(id);localStorage.setItem('lumina_likes',JSON.stringify([...s]));const store=getStore();const v=store.videos.find(x=>x.id===id);if(v)v.likes+=s.has(id)?1:-1;setStore(store);refresh()};
+ const isLiked=id=>likedSet().has(id);
+ const subsSet=()=>new Set(JSON.parse(localStorage.getItem('lumina_subs')||'[]'));
+ const toggleSub=email=>{if(!requireLogin())return;const s=subsSet();if(s.has(email))s.delete(email);else s.add(email);localStorage.setItem('lumina_subs',JSON.stringify([...s]));setSubs([...s]);showToast(s.has(email)?'已订阅':'已取消订阅')};
+ const [subs,setSubs]=useState(()=>[...subsSet()]);
+ const watchSet=()=>new Set(JSON.parse(localStorage.getItem('lumina_watch')||'[]'));
+ const toggleWatch=v=>{if(!requireLogin())return;const s=watchSet();if(s.has(v.id))s.delete(v.id);else{s.add(v.id);showToast('已加入稍后观看')}localStorage.setItem('lumina_watch',JSON.stringify([...s]));setWatch([...s])};
+ const [watch,setWatch]=useState(()=>[...watchSet()]);
+ const onUploaded=v=>{refresh();setCurrent(v);showToast('发布成功！')};
+ const handlePlay=v=>{const store=getStore();const x=store.videos.find(vv=>vv.id===v.id);if(x)x.views++;setStore(store);refresh();setCurrent(v);window.scrollTo(0,0)};
+ const commentsFor=id=>((getStore().comments||{})[id])||[];
+ const addComment=(id,text)=>{const store=getStore();store.comments=store.comments||{};(store.comments[id]=store.comments[id]||[]).push({id:'c'+Date.now(),author:user.name,authorEmail:user.email,text,createdAt:Date.now(),likes:0});setStore(store);forceVer+=1;setForce(forceVer)};
+ const likeComment=(vid,cid)=>{const store=getStore();store.comments=store.comments||{};const c=(store.comments[vid]||[]).find(x=>x.id===cid);if(c){c.likes+=1}setStore(store);forceVer+=1;setForce(forceVer)};
+ const [force,setForce]=useState(0);const forceVer=0;
+ const renderMe=()=>{
+  if(!user)return <div className="empty"><div className="big">🔒</div><h3>请先登录</h3><p>登录后可以管理订阅、收藏和你的视频</p><button className="btn btn-primary" style={{marginTop:16}} onClick={()=>setLoginOpen(true)}>立即登录</button></div>;
+  const myVideos=videos.filter(v=>v.authorEmail===user.email);
+  const subVideos=videos.filter(v=>subs.includes(v.authorEmail));
+  const watchVideos=videos.filter(v=>watch.includes(v.id));
+  return <><div className="profile-head"><span className="avatar">{initials(user.name)}</span><div><h2>{user.name}</h2><div className="email">{user.email}</div><div className="profile-stats"><span><b>{myVideos.length}</b> 个视频</span><span><b>{subs.length}</b> 个订阅</span><span><b>{watch.length}</b> 稍后观看</span></div></div></div>
+   <h2 className="section-title">我的视频</h2>{myVideos.length===0?<div className="empty-tab">📭 你还没有上传视频</div>:<div className="grid">{myVideos.map(v=<VideoCard key={v.id} video={v} onClick={handlePlay}/>)}</div>}
+   <h2 className="section-title" style={{marginTop:26}}>订阅更新</h2>{subVideos.length===0?<div className="empty-tab">🔔 订阅频道后，最新视频会在这里出现</div>:<div className="grid">{subVideos.map(v=<VideoCard key={v.id} video={v} onClick={handlePlay}/>)}</div>}
+   <h2 className="section-title" style={{marginTop:26}}>稍后观看</h2>{watchVideos.length===0?<div className="empty-tab">⏰ 收藏的视频会保存在这里</div>:<div className="grid">{watchVideos.map(v=<VideoCard key={v.id} video={v} onClick={handlePlay}/>)}</div>}</>;
+ };
+ const renderMain=()=>{if(current)return <PlayerPage video={current} allVideos={videos} onPlay={handlePlay} onLike={onLike} liked={isLiked(current.id)} subs={subs} onSub={toggleSub} watch={watch} onWatch={toggleWatch} onAddComment={addComment} onLikeComment={likeComment} comments={commentsFor(current.id)}/>;if(tab==='me')return renderMe();return <HomePage videos={filtered} onPlay={handlePlay} onUpload={handleUploadClick} activeTab={activeTab} onTab={setActiveTab}/>};
+ return <div className="app">
+  <Navbar user={user} onLogin={()=>setLoginOpen(true)} onUpload={handleUploadClick} onHome={()=>{setCurrent(null);setTab('home')}} query={query} setQuery={setQuery}/>
+  <main className="main">{renderMain()}</main>
+  <nav className="bottom-nav">
+   <button className={tab==='home'?'active':''} onClick={()=>{setCurrent(null);setTab('home')}}><I><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></I>首页</button>
+   <button className={tab==='upload'?'active':''} onClick={()=>{handleUploadClick();setTab('upload')}}><I><path d="M14 13h-4v5H7l5 5 5-5h-3v-5zm-4-2V6H7l5-5 5 5h-3v5H10z" transform="translate(0 3)"/></I>上传</button>
+   <button className={tab==='me'?'active':''} onClick={()=>{if(requireLogin()){setTab('me');setCurrent(null)}else setLoginOpen(true)}}><I><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></I>我的</button>
+  </nav>
+  <LoginModal open={loginOpen} onClose={()=>setLoginOpen(false)} onLogin={onLogin}/>
+  <UploadModal open={uploadOpen} onClose={()=>setUploadOpen(false)} user={user} onUploaded={onUploaded}/>
+  {toast&&<div className="toast">{toast}</div>}
+ </div>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
